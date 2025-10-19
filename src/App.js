@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import nbaDataService from './services/nbaDataService';
 
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -7,222 +8,69 @@ function App() {
   const [propLine, setPropLine] = useState('20.5');
   const [searchTerm, setSearchTerm] = useState('');
   const [hitRatePeriod, setHitRatePeriod] = useState('Last 20');
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
-  // Current 2024-2025 Washington Wizards roster with real stats
-  const wizardsPlayers = [
-    { 
-      id: 1, 
-      name: "Jordan Poole", 
-      position: "SG", 
-      experience: "5",
-      college: "Michigan",
-      avgPoints: 21.2, 
-      avgRebounds: 3.7, 
-      avgAssists: 4.9,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 18, reb: 3, ast: 5, threePM: 3, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 24, reb: 4, ast: 6, threePM: 4, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 19, reb: 2, ast: 4, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 22, reb: 3, ast: 7, threePM: 5, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 16, reb: 2, ast: 3, threePM: 2, stl: 1, blk: 0 }
-      ]
-    },
-    { 
-      id: 2, 
-      name: "Kyle Kuzma", 
-      position: "PF", 
-      experience: "7",
-      college: "Utah",
-      avgPoints: 15.2, 
-      avgRebounds: 5.8, 
-      avgAssists: 4.2,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 12, reb: 6, ast: 3, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 18, reb: 7, ast: 5, threePM: 3, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 14, reb: 5, ast: 2, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 16, reb: 8, ast: 4, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 13, reb: 4, ast: 3, threePM: 1, stl: 0, blk: 1 }
-      ]
-    },
-    { 
-      id: 3, 
-      name: "Malcolm Brogdon", 
-      position: "PG", 
-      experience: "8",
-      college: "Virginia",
-      avgPoints: 12.7, 
-      avgRebounds: 3.3, 
-      avgAssists: 4.1,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 15, reb: 3, ast: 5, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 11, reb: 2, ast: 4, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 14, reb: 4, ast: 3, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 9, reb: 3, ast: 6, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 16, reb: 2, ast: 4, threePM: 3, stl: 1, blk: 0 }
-      ]
-    },
-    { 
-      id: 4, 
-      name: "Bilal Coulibaly", 
-      position: "SF", 
-      experience: "2",
-      college: "France",
-      avgPoints: 12.4, 
-      avgRebounds: 5.1, 
-      avgAssists: 3.5,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 14, reb: 6, ast: 4, threePM: 2, stl: 1, blk: 1 },
-        { date: "4/11", opponent: "@ MIA", pts: 10, reb: 4, ast: 3, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 16, reb: 7, ast: 2, threePM: 3, stl: 1, blk: 1 },
-        { date: "4/7", opponent: "@ ATL", pts: 11, reb: 5, ast: 4, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 13, reb: 6, ast: 3, threePM: 2, stl: 1, blk: 0 }
-      ]
-    },
-    { 
-      id: 5, 
-      name: "Corey Kispert", 
-      position: "SG", 
-      experience: "3",
-      college: "Gonzaga",
-      avgPoints: 11.8, 
-      avgRebounds: 2.6, 
-      avgAssists: 2.0,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 9, reb: 2, ast: 2, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 14, reb: 3, ast: 1, threePM: 3, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 8, reb: 2, ast: 2, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 13, reb: 3, ast: 1, threePM: 3, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 12, reb: 2, ast: 2, threePM: 2, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 6, 
-      name: "Tyus Jones", 
-      position: "PG", 
-      experience: "9",
-      college: "Duke",
-      avgPoints: 9.8, 
-      avgRebounds: 2.4, 
-      avgAssists: 6.2,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 8, reb: 2, ast: 8, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 3, ast: 7, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 7, reb: 2, ast: 5, threePM: 1, stl: 2, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 11, reb: 3, ast: 9, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 6, reb: 2, ast: 6, threePM: 1, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 7, 
-      name: "Deni Avdija", 
-      position: "SF", 
-      experience: "4",
-      college: "Israel",
-      avgPoints: 9.4, 
-      avgRebounds: 5.2, 
-      avgAssists: 2.8,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 7, reb: 5, ast: 2, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 6, ast: 3, threePM: 2, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 8, reb: 4, ast: 2, threePM: 0, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 10, reb: 7, ast: 3, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 9, reb: 5, ast: 2, threePM: 1, stl: 1, blk: 1 }
-      ]
-    },
-    { 
-      id: 8, 
-      name: "Marvin Bagley III", 
-      position: "PF", 
-      experience: "6",
-      college: "Duke",
-      avgPoints: 8.6, 
-      avgRebounds: 4.8, 
-      avgAssists: 1.2,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/11", opponent: "@ MIA", pts: 11, reb: 6, ast: 1, threePM: 0, stl: 0, blk: 2 },
-        { date: "4/9", opponent: "vs CHI", pts: 7, reb: 4, ast: 0, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/7", opponent: "@ ATL", pts: 10, reb: 7, ast: 2, threePM: 0, stl: 1, blk: 1 },
-        { date: "4/5", opponent: "vs NYK", pts: 8, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 9, 
-      name: "Richaun Holmes", 
-      position: "C", 
-      experience: "9",
-      college: "Bowling Green",
-      avgPoints: 7.2, 
-      avgRebounds: 6.1, 
-      avgAssists: 0.8,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 5, reb: 7, ast: 1, threePM: 0, stl: 0, blk: 2 },
-        { date: "4/11", opponent: "@ MIA", pts: 9, reb: 8, ast: 0, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 3 },
-        { date: "4/7", opponent: "@ ATL", pts: 8, reb: 9, ast: 1, threePM: 0, stl: 1, blk: 1 },
-        { date: "4/5", opponent: "vs NYK", pts: 7, reb: 6, ast: 0, threePM: 0, stl: 0, blk: 2 }
-      ]
-    },
-    { 
-      id: 10, 
-      name: "Johnny Davis", 
-      position: "SG", 
-      experience: "2",
-      college: "Wisconsin",
-      avgPoints: 6.8, 
-      avgRebounds: 2.1, 
-      avgAssists: 1.4,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 5, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 8, reb: 3, ast: 2, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 6, reb: 1, ast: 1, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 9, reb: 2, ast: 1, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 7, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 11, 
-      name: "Anthony Gill", 
-      position: "PF", 
-      experience: "4",
-      college: "Virginia",
-      avgPoints: 5.4, 
-      avgRebounds: 3.2, 
-      avgAssists: 0.9,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 4, reb: 3, ast: 1, threePM: 0, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 7, reb: 4, ast: 0, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 5, reb: 2, ast: 1, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/7", opponent: "@ ATL", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 1, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 4, reb: 3, ast: 0, threePM: 0, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 12, 
-      name: "Jared Butler", 
-      position: "PG", 
-      experience: "3",
-      college: "Baylor",
-      avgPoints: 4.9, 
-      avgRebounds: 1.8, 
-      avgAssists: 2.3,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 3, reb: 2, ast: 3, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 6, reb: 1, ast: 2, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 4, reb: 2, ast: 2, threePM: 0, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 7, reb: 2, ast: 3, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 5, reb: 1, ast: 2, threePM: 1, stl: 0, blk: 0 }
-      ]
-    }
-  ];
-
+  // Load player data from API
   useEffect(() => {
-    if (wizardsPlayers.length > 0) {
-      setSelectedPlayer(wizardsPlayers[0]);
-    }
+    const loadPlayerData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Get roster from API
+        const roster = await nbaDataService.getWizardsRoster();
+        
+        // Load detailed data for each player
+        const playersWithStats = await Promise.all(
+          roster.map(async (player) => {
+            const playerData = await nbaDataService.getPlayerData(player.id);
+            return {
+              ...player,
+              ...playerData.stats,
+              gameLog: playerData.gameLog,
+              lastUpdated: playerData.lastUpdated
+            };
+          })
+        );
+        
+        setPlayers(playersWithStats);
+        setLastUpdated(new Date().toISOString());
+        
+        // Select first player by default
+        if (playersWithStats.length > 0) {
+          setSelectedPlayer(playersWithStats[0]);
+        }
+      } catch (err) {
+        console.error('Error loading player data:', err);
+        setError('Failed to load player data. Using fallback data.');
+        
+        // Use fallback data
+        const fallbackRoster = nbaDataService.getFallbackRoster();
+        const fallbackPlayers = fallbackRoster.map(player => ({
+          ...player,
+          avgPoints: 0,
+          avgRebounds: 0,
+          avgAssists: 0,
+          gameLog: [],
+          lastUpdated: new Date().toISOString()
+        }));
+        
+        setPlayers(fallbackPlayers);
+        if (fallbackPlayers.length > 0) {
+          setSelectedPlayer(fallbackPlayers[0]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPlayerData();
   }, []);
 
-  const filteredPlayers = wizardsPlayers.filter(player =>
+  const filteredPlayers = players.filter(player =>
     player.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -356,26 +204,62 @@ function App() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              disabled={loading}
             />
           </div>
 
-          <div className="players-list">
-            {filteredPlayers.map((player) => (
-              <div 
-                key={player.id} 
-                className={`player-card ${selectedPlayer?.id === player.id ? 'selected' : ''}`}
-                onClick={() => setSelectedPlayer(player)}
+          {loading && (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p>Loading player data...</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="error-state">
+              <div className="error-icon">⚠️</div>
+              <p>{error}</p>
+              <button 
+                className="retry-button"
+                onClick={() => window.location.reload()}
               >
-                <div className="player-avatar">
-                  <div className="avatar-placeholder">👤</div>
+                Retry
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && (
+            <div className="players-list">
+              {filteredPlayers.map((player) => (
+                <div 
+                  key={player.id} 
+                  className={`player-card ${selectedPlayer?.id === player.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedPlayer(player)}
+                >
+                  <div className="player-avatar">
+                    <div className="avatar-placeholder">👤</div>
+                  </div>
+                  <div className="player-info">
+                    <h3>{player.name}</h3>
+                    <p>{player.position} | {player.height || 'N/A'} | {player.weight || 'N/A'}</p>
+                    {player.avgPoints !== undefined && (
+                      <div className="player-stats-preview">
+                        <span>{player.avgPoints.toFixed(1)} PPG</span>
+                        <span>{player.avgRebounds.toFixed(1)} RPG</span>
+                        <span>{player.avgAssists.toFixed(1)} APG</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="player-info">
-                  <h3>{player.name}</h3>
-                  <p>{player.position} | Exp: {player.experience} | {player.college}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {lastUpdated && (
+            <div className="last-updated">
+              <small>Last updated: {new Date(lastUpdated).toLocaleTimeString()}</small>
+            </div>
+          )}
         </div>
 
         {/* Right Content */}
