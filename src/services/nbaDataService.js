@@ -3,8 +3,8 @@ const API_CONFIG = {
   // Free NBA API endpoints
   NBA_API_BASE: 'https://www.balldontlie.io/api/v1',
   SPORTS_DATA_BASE: 'https://api.sportsdata.io/v3/nba',
-  // Backup API for additional data
-  BACKUP_API: 'https://api-nba-v1.p.rapidapi.com'
+  // RapidAPI NBA endpoint
+  RAPID_API_BASE: 'https://api-nba-v1.p.rapidapi.com'
 };
 
 // API Keys - These should be stored in environment variables in production
@@ -41,6 +41,31 @@ class NBADataService {
     }
   }
 
+  // RapidAPI call with proper headers
+  async makeRapidAPICall(endpoint, options = {}) {
+    try {
+      const url = `${API_CONFIG.RAPID_API_BASE}${endpoint}`;
+      const response = await fetch(url, {
+        headers: {
+          'X-RapidAPI-Key': API_KEYS.RAPID_API,
+          'X-RapidAPI-Host': 'api-nba-v1.p.rapidapi.com',
+          'Content-Type': 'application/json',
+          ...options.headers
+        },
+        ...options
+      });
+
+      if (!response.ok) {
+        throw new Error(`RapidAPI call failed: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('RapidAPI call error:', error);
+      throw error;
+    }
+  }
+
   // Get cached data or fetch new data
   async getCachedData(key, fetchFunction) {
     const cached = this.cache.get(key);
@@ -67,25 +92,50 @@ class NBADataService {
     }
   }
 
-  // Get Washington Wizards team ID
+  // Get Washington Wizards team ID from Ball Don't Lie API
   async getWizardsTeamId() {
     return this.getCachedData('wizards_team_id', async () => {
-      const url = `${API_CONFIG.NBA_API_BASE}/teams`;
-      const data = await this.makeAPICall(url);
-      
-      const wizards = data.data.find(team => 
-        team.name.toLowerCase().includes('washington') || 
-        team.name.toLowerCase().includes('wizards')
-      );
-      
-      return wizards ? wizards.id : 15; // Default to Wizards ID if not found
+      try {
+        const url = `${API_CONFIG.NBA_API_BASE}/teams`;
+        const data = await this.makeAPICall(url);
+        
+        const wizards = data.data.find(team => 
+          team.name.toLowerCase().includes('washington') || 
+          team.name.toLowerCase().includes('wizards')
+        );
+        
+        return wizards ? wizards.id : 15; // Default to Wizards ID if not found
+      } catch (error) {
+        console.error('Error getting Wizards team ID:', error);
+        return 15; // Default Wizards ID
+      }
     });
   }
 
-  // Get current Wizards roster
+  // Get Wizards team ID from RapidAPI
+  async getWizardsTeamIdRapidAPI() {
+    return this.getCachedData('wizards_team_id_rapidapi', async () => {
+      try {
+        const data = await this.makeRapidAPICall('/teams');
+        
+        const wizards = data.response.find(team => 
+          team.name.toLowerCase().includes('washington') || 
+          team.name.toLowerCase().includes('wizards')
+        );
+        
+        return wizards ? wizards.id : 15; // Default to Wizards ID if not found
+      } catch (error) {
+        console.error('Error getting Wizards team ID from RapidAPI:', error);
+        return 15; // Default Wizards ID
+      }
+    });
+  }
+
+  // Get current Wizards roster (tries multiple sources)
   async getWizardsRoster() {
     return this.getCachedData('wizards_roster', async () => {
       try {
+        // Try Ball Don't Lie API first
         const teamId = await this.getWizardsTeamId();
         const url = `${API_CONFIG.NBA_API_BASE}/players?per_page=100`;
         const data = await this.makeAPICall(url);
@@ -95,26 +145,88 @@ class NBADataService {
           player.team && player.team.id === teamId
         );
 
-        return wizardsPlayers.map(player => ({
+        if (wizardsPlayers.length > 0) {
+          return wizardsPlayers.map(player => ({
+            id: player.id,
+            name: `${player.first_name} ${player.last_name}`,
+            position: player.position,
+            team: player.team,
+            height: player.height_feet ? `${player.height_feet}'${player.height_inches}"` : 'N/A',
+            weight: player.weight_pounds ? `${player.weight_pounds} lbs` : 'N/A'
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching roster from Ball Don\'t Lie:', error);
+      }
+
+      try {
+        // Try RapidAPI as backup
+        return await this.getWizardsRosterRapidAPI();
+      } catch (error) {
+        console.error('Error fetching roster from RapidAPI:', error);
+      }
+
+      // Return fallback data if all APIs fail
+      return this.getFallbackRoster();
+    });
+  }
+
+  // Get current Wizards roster from RapidAPI
+  async getWizardsRosterRapidAPI() {
+    return this.getCachedData('wizards_roster_rapidapi', async () => {
+      try {
+        const teamId = await this.getWizardsTeamIdRapidAPI();
+        const data = await this.makeRapidAPICall(`/players/teamId/${teamId}`);
+        
+        return data.response.map(player => ({
           id: player.id,
-          name: `${player.first_name} ${player.last_name}`,
-          position: player.position,
-          team: player.team,
-          height: player.height_feet ? `${player.height_feet}'${player.height_inches}"` : 'N/A',
-          weight: player.weight_pounds ? `${player.weight_pounds} lbs` : 'N/A'
+          name: `${player.firstname} ${player.lastname}`,
+          position: player.leagues?.standard?.pos || 'N/A',
+          height: player.height ? `${player.height.feets}'${player.height.inches}"` : 'N/A',
+          weight: player.weight ? `${player.weight.pounds} lbs` : 'N/A',
+          team: { id: teamId, name: 'Washington Wizards' }
         }));
       } catch (error) {
-        console.error('Error fetching roster:', error);
-        // Return fallback data
+        console.error('Error fetching roster from RapidAPI:', error);
         return this.getFallbackRoster();
       }
     });
   }
 
-  // Get player statistics for current season
+  // Get player statistics from RapidAPI
+  async getPlayerStatsRapidAPI(playerId, season = '2024-25') {
+    return this.getCachedData(`player_stats_rapidapi_${playerId}`, async () => {
+      try {
+        const data = await this.makeRapidAPICall(`/players/statistics?id=${playerId}&season=${season}`);
+        
+        if (data.response && data.response.length > 0) {
+          const stats = data.response[0];
+          return {
+            gamesPlayed: stats.games?.played || 0,
+            avgPoints: stats.points || 0,
+            avgRebounds: stats.totReb || 0,
+            avgAssists: stats.assists || 0,
+            avgSteals: stats.steals || 0,
+            avgBlocks: stats.blocks || 0,
+            avgThreePointers: stats.tpm || 0,
+            fieldGoalPercentage: stats.fgp || 0,
+            threePointPercentage: stats.tpp || 0,
+            freeThrowPercentage: stats.ftp || 0
+          };
+        }
+        return null;
+      } catch (error) {
+        console.error(`Error fetching stats for player ${playerId} from RapidAPI:`, error);
+        return null;
+      }
+    });
+  }
+
+  // Get player statistics for current season (tries multiple sources)
   async getPlayerStats(playerId, season = '2025-26') {
     return this.getCachedData(`player_stats_${playerId}`, async () => {
       try {
+        // Try Ball Don't Lie API first
         const url = `${API_CONFIG.NBA_API_BASE}/stats?player_ids[]=${playerId}&seasons[]=${season}`;
         const data = await this.makeAPICall(url);
         
@@ -133,11 +245,18 @@ class NBADataService {
             freeThrowPercentage: stats.ft_pct || 0
           };
         }
-        return null;
       } catch (error) {
-        console.error(`Error fetching stats for player ${playerId}:`, error);
-        return null;
+        console.error(`Error fetching stats for player ${playerId} from Ball Don't Lie:`, error);
       }
+
+      try {
+        // Try RapidAPI as backup
+        return await this.getPlayerStatsRapidAPI(playerId, season);
+      } catch (error) {
+        console.error(`Error fetching stats for player ${playerId} from RapidAPI:`, error);
+      }
+
+      return null;
     });
   }
 
