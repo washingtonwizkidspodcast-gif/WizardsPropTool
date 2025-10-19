@@ -76,51 +76,6 @@ function App() {
       }
     };
 
-  // Calculate analytics when player, prop, or line changes
-  useEffect(() => {
-    if (selectedPlayer && selectedProp && propLine) {
-      const analyticsData = propAnalyticsService.calculateBettingMetrics(
-        selectedPlayer, 
-        selectedProp, 
-        propLine, 
-        hitRatePeriod
-      );
-      
-      const bettingInsights = propAnalyticsService.generateBettingInsights(
-        selectedPlayer, 
-        selectedProp, 
-        propLine, 
-        hitRatePeriod
-      );
-      
-      // Generate chart data
-      const chartDataPoints = selectedPlayer.gameLog.map((game, index) => {
-        let value = 0;
-        switch(selectedProp) {
-          case 'Points': value = game.pts; break;
-          case 'Rebounds': value = game.reb; break;
-          case 'Assists': value = game.ast; break;
-          case '3-Pointers Made': value = game.threePM; break;
-          case 'Steals': value = game.stl; break;
-          case 'Blocks': value = game.blk; break;
-          case 'Pts+Reb+Ast': value = game.pts + game.reb + game.ast; break;
-          case 'Pts+Reb': value = game.pts + game.reb; break;
-          case 'Pts+Ast': value = game.pts + game.ast; break;
-          case 'Reb+Ast': value = game.reb + game.ast; break;
-          default: value = game.pts;
-        }
-        return {
-          date: game.date,
-          value: value,
-          opponent: game.opponent,
-          isHit: value > parseFloat(propLine)
-        };
-      });
-      
-      setAnalytics(analyticsData);
-      setInsights(bettingInsights);
-      setChartData(chartDataPoints);
-    }
     loadPlayerData();
   }, []);
 
