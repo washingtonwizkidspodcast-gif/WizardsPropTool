@@ -309,23 +309,29 @@ class NBADataService {
     return 'N/A';
   }
 
-  // Fallback roster data (current 2025-2026 Wizards players)
+  // Fallback roster data (complete 2025-2026 Wizards players)
   getFallbackRoster() {
     return [
-      { id: 1, name: "Bub Carrington", position: "PG", height: "6'4\"", weight: "195 lbs" },
-      { id: 2, name: "Bilal Coulibaly", position: "SG", height: "6'8\"", weight: "195 lbs" },
-      { id: 3, name: "Corey Kispert", position: "SF", height: "6'6\"", weight: "224 lbs" },
-      { id: 4, name: "Kyshawn George", position: "PF", height: "6'8\"", weight: "205 lbs" },
-      { id: 5, name: "Alex Sarr", position: "C", height: "7'0\"", weight: "224 lbs" },
-      { id: 6, name: "CJ McCollum", position: "G", height: "6'3\"", weight: "190 lbs" },
-      { id: 7, name: "Khris Middleton", position: "F", height: "6'7\"", weight: "222 lbs" },
-      { id: 8, name: "Tre Johnson", position: "G", height: "6'5\"", weight: "180 lbs" },
-      { id: 9, name: "Will Riley", position: "G", height: "6'4\"", weight: "190 lbs" },
-      { id: 10, name: "Jamir Watkins", position: "F", height: "6'7\"", weight: "215 lbs" },
-      { id: 11, name: "Marvin Bagley III", position: "C", height: "6'10\"", weight: "235 lbs" },
-      { id: 12, name: "Richaun Holmes", position: "C", height: "6'9\"", weight: "235 lbs" },
-      { id: 13, name: "Anthony Gill", position: "F", height: "6'8\"", weight: "230 lbs" },
-      { id: 14, name: "Tristan Vukcevic", position: "F", height: "7'0\"", weight: "225 lbs" }
+      { id: 1, name: "Bub Carrington", position: "PG", height: "6'4\"", weight: "195 lbs", jersey: "4" },
+      { id: 2, name: "Bilal Coulibaly", position: "SG", height: "6'8\"", weight: "195 lbs", jersey: "7" },
+      { id: 3, name: "Corey Kispert", position: "SF", height: "6'6\"", weight: "224 lbs", jersey: "24" },
+      { id: 4, name: "Kyshawn George", position: "PF", height: "6'8\"", weight: "205 lbs", jersey: "14" },
+      { id: 5, name: "Alex Sarr", position: "C", height: "7'0\"", weight: "224 lbs", jersey: "20" },
+      { id: 6, name: "CJ McCollum", position: "G", height: "6'3\"", weight: "190 lbs", jersey: "3" },
+      { id: 7, name: "Khris Middleton", position: "F", height: "6'7\"", weight: "222 lbs", jersey: "22" },
+      { id: 8, name: "Tre Johnson", position: "G", height: "6'5\"", weight: "180 lbs", jersey: "8" },
+      { id: 9, name: "Will Riley", position: "G", height: "6'4\"", weight: "190 lbs", jersey: "12" },
+      { id: 10, name: "Jamir Watkins", position: "F", height: "6'7\"", weight: "215 lbs", jersey: "15" },
+      { id: 11, name: "Marvin Bagley III", position: "C", height: "6'10\"", weight: "235 lbs", jersey: "35" },
+      { id: 12, name: "Richaun Holmes", position: "C", height: "6'9\"", weight: "235 lbs", jersey: "25" },
+      { id: 13, name: "Anthony Gill", position: "F", height: "6'8\"", weight: "230 lbs", jersey: "16" },
+      { id: 14, name: "Tristan Vukcevic", position: "F", height: "7'0\"", weight: "225 lbs", jersey: "19" },
+      { id: 15, name: "Cam Whitmore", position: "SF", height: "6'7\"", weight: "232 lbs", jersey: "9" },
+      { id: 16, name: "AJ Johnson", position: "PG", height: "6'3\"", weight: "180 lbs", jersey: "5" },
+      { id: 17, name: "Jalen Duren", position: "C", height: "6'11\"", weight: "250 lbs", jersey: "0" },
+      { id: 18, name: "Jaden Ivey", position: "SG", height: "6'4\"", weight: "195 lbs", jersey: "23" },
+      { id: 19, name: "Ausar Thompson", position: "SF", height: "6'7\"", weight: "205 lbs", jersey: "11" },
+      { id: 20, name: "Isaiah Stewart", position: "PF", height: "6'8\"", weight: "250 lbs", jersey: "28" }
     ];
   }
 

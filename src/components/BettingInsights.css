@@ -1,100 +1,107 @@
-/* BettingInsights.css */
+/* BettingInsights.css - Wizards Theme */
 .insights-container {
-  background: #1a1a1a;
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid #333;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .insights-container h3 {
-  color: #ffffff;
-  margin: 0 0 20px 0;
+  color: #FFD700;
+  margin: 0 0 24px 0;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .no-insights {
-  color: #aaaaaa;
+  color: #C4CED4;
   text-align: center;
-  padding: 20px;
+  padding: 24px;
   font-style: italic;
+  font-weight: 500;
 }
 
 /* Recommendation Card */
 .recommendation-card {
-  background: #2a2a2a;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-left: 4px solid #4ade80;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border-left: 4px solid #FFD700;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .recommendation-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .recommendation-header h4 {
-  color: #ffffff;
+  color: #FFFFFF;
   margin: 0;
   font-size: 16px;
+  font-weight: 700;
 }
 
 .recommendation-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .recommendation-badge.strong-over {
-  background: #4ade80;
-  color: #000;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #002B5C;
 }
 
 .recommendation-badge.over {
-  background: #60a5fa;
-  color: #000;
+  background: linear-gradient(135deg, #E31837 0%, #B8142A 100%);
+  color: #FFFFFF;
 }
 
 .recommendation-badge.strong-under {
-  background: #ff6b6b;
-  color: #fff;
+  background: linear-gradient(135deg, #E31837 0%, #B8142A 100%);
+  color: #FFFFFF;
 }
 
 .recommendation-badge.under {
-  background: #fbbf24;
-  color: #000;
+  background: linear-gradient(135deg, #C4CED4 0%, #A0A0A0 100%);
+  color: #002B5C;
 }
 
 .recommendation-badge.trending-up {
-  background: #4ade80;
-  color: #000;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #002B5C;
 }
 
 .recommendation-badge.trending-down {
-  background: #ff6b6b;
-  color: #fff;
+  background: linear-gradient(135deg, #E31837 0%, #B8142A 100%);
+  color: #FFFFFF;
 }
 
 .recommendation-badge.no-edge {
-  background: #6b7280;
-  color: #fff;
+  background: linear-gradient(135deg, #C4CED4 0%, #A0A0A0 100%);
+  color: #002B5C;
 }
 
 .recommendation-card p {
-  color: #cccccc;
-  margin: 0 0 15px 0;
-  line-height: 1.5;
+  color: #C4CED4;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  font-weight: 500;
 }
 
 .recommendation-metrics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  gap: 16px;
 }
 
 .metric {
@@ -103,43 +110,48 @@
 
 .metric-label {
   display: block;
-  color: #aaaaaa;
+  color: #C4CED4;
   font-size: 12px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .metric-value {
   display: block;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .metric-value.positive {
-  color: #4ade80;
+  color: #FFD700;
 }
 
 .metric-value.negative {
-  color: #ff6b6b;
+  color: #E31837;
 }
 
 /* Insights List */
 .insights-list {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .insight-item {
   display: flex;
-  gap: 12px;
-  padding: 12px;
-  background: #2a2a2a;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  border-left: 3px solid #60a5fa;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 3px solid #E31837;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .insight-icon {
-  font-size: 20px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
@@ -148,174 +160,188 @@
 }
 
 .insight-title {
-  color: #ffffff;
-  margin: 0 0 5px 0;
+  color: #FFFFFF;
+  margin: 0 0 6px 0;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .insight-message {
-  color: #cccccc;
+  color: #C4CED4;
   margin: 0;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 /* Advanced Metrics */
 .advanced-metrics {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .advanced-metrics h4 {
-  color: #ffffff;
-  margin: 0 0 15px 0;
+  color: #FFD700;
+  margin: 0 0 16px 0;
   font-size: 16px;
+  font-weight: 700;
 }
 
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 16px;
 }
 
 .metric-card {
-  background: #2a2a2a;
-  border-radius: 8px;
-  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .metric-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .metric-title {
-  color: #aaaaaa;
+  color: #C4CED4;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .metric-bar {
-  height: 6px;
-  background: #1a1a1a;
-  border-radius: 3px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .metric-fill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: width 0.3s ease;
 }
 
 /* Streak Info */
 .streak-info {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .streak-info h4 {
-  color: #ffffff;
-  margin: 0 0 10px 0;
+  color: #FFD700;
+  margin: 0 0 12px 0;
   font-size: 16px;
+  font-weight: 700;
 }
 
 .streak-display {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background: #2a2a2a;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .streak-display.hit {
-  border-left: 4px solid #4ade80;
+  border-left: 4px solid #FFD700;
 }
 
 .streak-display.miss {
-  border-left: 4px solid #ff6b6b;
+  border-left: 4px solid #E31837;
 }
 
 .streak-count {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .streak-type {
-  color: #ffffff;
-  font-weight: 600;
+  color: #FFFFFF;
+  font-weight: 700;
 }
 
 /* Split Analysis */
 .split-analysis h4 {
-  color: #ffffff;
-  margin: 0 0 15px 0;
+  color: #FFD700;
+  margin: 0 0 16px 0;
   font-size: 16px;
+  font-weight: 700;
 }
 
 .split-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 16px;
 }
 
 .split-card {
-  background: #2a2a2a;
-  border-radius: 8px;
-  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .split-card.home {
-  border-left: 4px solid #4ade80;
+  border-left: 4px solid #FFD700;
 }
 
 .split-card.away {
-  border-left: 4px solid #60a5fa;
+  border-left: 4px solid #E31837;
 }
 
 .split-card h5 {
-  color: #ffffff;
-  margin: 0 0 8px 0;
+  color: #FFFFFF;
+  margin: 0 0 10px 0;
   font-size: 14px;
+  font-weight: 700;
 }
 
 .split-stats {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .split-stats span {
-  color: #aaaaaa;
+  color: #C4CED4;
   font-size: 12px;
+  font-weight: 500;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .insights-container {
-    padding: 15px;
+    padding: 16px;
   }
   
   .recommendation-metrics {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
   
   .metrics-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
   
   .split-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
   
   .insight-item {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
   
   .insight-icon {

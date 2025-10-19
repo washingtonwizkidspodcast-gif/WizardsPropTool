@@ -300,15 +300,11 @@ function App() {
                     <div className="avatar-placeholder">👤</div>
                   </div>
                   <div className="player-info">
-                    <h3>{player.name}</h3>
+                    <div className="player-name-row">
+                      <h3>{player.name}</h3>
+                      {player.jersey && <span className="jersey-number">#{player.jersey}</span>}
+                    </div>
                     <p>{player.position} | {player.height || 'N/A'} | {player.weight || 'N/A'}</p>
-                    {player.avgPoints !== undefined && (
-                      <div className="player-stats-preview">
-                        <span>{player.avgPoints.toFixed(1)} PPG</span>
-                        <span>{player.avgRebounds.toFixed(1)} RPG</span>
-                        <span>{player.avgAssists.toFixed(1)} APG</span>
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
