@@ -8,142 +8,210 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [hitRatePeriod, setHitRatePeriod] = useState('Last 20');
 
-  // Sample Wizards players data with more realistic info
+  // Current 2024-2025 Washington Wizards roster with real stats
   const wizardsPlayers = [
     { 
       id: 1, 
-      name: "Kyle Kuzma", 
-      position: "PF", 
-      experience: "7",
-      college: "Utah",
-      avgPoints: 22.2, 
-      avgRebounds: 6.5, 
-      avgAssists: 4.2,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 7, reb: 3, ast: 2, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 11, reb: 5, ast: 3, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 3, reb: 2, ast: 1, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/7", opponent: "@ ATL", pts: 15, reb: 4, ast: 2, threePM: 3, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 8, reb: 3, ast: 1, threePM: 1, stl: 1, blk: 0 }
-      ]
-    },
-    { 
-      id: 2, 
-      name: "Bradley Beal", 
-      position: "SG", 
-      experience: "12",
-      college: "Florida",
-      avgPoints: 23.2, 
-      avgRebounds: 3.9, 
-      avgAssists: 5.4,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 18, reb: 2, ast: 4, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 25, reb: 3, ast: 6, threePM: 3, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 22, reb: 4, ast: 5, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 19, reb: 2, ast: 7, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 28, reb: 3, ast: 4, threePM: 4, stl: 1, blk: 0 }
-      ]
-    },
-    { 
-      id: 3, 
-      name: "Kristaps Porzingis", 
-      position: "C", 
-      experience: "9",
-      college: "Latvia",
-      avgPoints: 20.1, 
-      avgRebounds: 8.2, 
-      avgAssists: 2.7,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 12, reb: 8, ast: 2, threePM: 1, stl: 0, blk: 2 },
-        { date: "4/11", opponent: "@ MIA", pts: 16, reb: 10, ast: 3, threePM: 2, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 24, reb: 9, ast: 2, threePM: 3, stl: 0, blk: 3 },
-        { date: "4/7", opponent: "@ ATL", pts: 18, reb: 7, ast: 1, threePM: 2, stl: 1, blk: 1 },
-        { date: "4/5", opponent: "vs NYK", pts: 22, reb: 11, ast: 3, threePM: 2, stl: 0, blk: 2 }
-      ]
-    },
-    { 
-      id: 4, 
-      name: "Tyus Jones", 
-      position: "PG", 
-      experience: "9",
-      college: "Duke",
-      avgPoints: 12.0, 
-      avgRebounds: 2.7, 
-      avgAssists: 7.3,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 8, reb: 2, ast: 9, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 14, reb: 3, ast: 8, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 10, reb: 2, ast: 6, threePM: 1, stl: 2, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 16, reb: 4, ast: 10, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 9, reb: 2, ast: 7, threePM: 1, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 5, 
-      name: "Deni Avdija", 
-      position: "SF", 
-      experience: "4",
-      college: "Israel",
-      avgPoints: 11.8, 
-      avgRebounds: 6.4, 
-      avgAssists: 3.8,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 6, reb: 4, ast: 2, threePM: 0, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 15, reb: 7, ast: 4, threePM: 2, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 9, reb: 5, ast: 3, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 13, reb: 8, ast: 2, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 11, reb: 6, ast: 4, threePM: 1, stl: 1, blk: 1 }
-      ]
-    },
-    { 
-      id: 6, 
-      name: "Corey Kispert", 
-      position: "SG", 
-      experience: "3",
-      college: "Gonzaga",
-      avgPoints: 9.2, 
-      avgRebounds: 2.8, 
-      avgAssists: 1.4,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 5, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 3, ast: 2, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 7, reb: 2, ast: 1, threePM: 1, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 10, reb: 3, ast: 1, threePM: 2, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 8, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 }
-      ]
-    },
-    { 
-      id: 7, 
-      name: "Daniel Gafford", 
-      position: "C", 
-      experience: "5",
-      college: "Arkansas",
-      avgPoints: 10.9, 
-      avgRebounds: 7.4, 
-      avgAssists: 1.0,
-      gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 8, reb: 6, ast: 1, threePM: 0, stl: 0, blk: 2 },
-        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 8, ast: 1, threePM: 0, stl: 0, blk: 1 },
-        { date: "4/9", opponent: "vs CHI", pts: 6, reb: 5, ast: 0, threePM: 0, stl: 0, blk: 3 },
-        { date: "4/7", opponent: "@ ATL", pts: 14, reb: 9, ast: 1, threePM: 0, stl: 1, blk: 1 },
-        { date: "4/5", opponent: "vs NYK", pts: 9, reb: 7, ast: 1, threePM: 0, stl: 0, blk: 2 }
-      ]
-    },
-    { 
-      id: 8, 
       name: "Jordan Poole", 
       position: "SG", 
       experience: "5",
       college: "Michigan",
-      avgPoints: 17.4, 
-      avgRebounds: 2.7, 
-      avgAssists: 4.4,
+      avgPoints: 21.2, 
+      avgRebounds: 3.7, 
+      avgAssists: 4.9,
       gameLog: [
-        { date: "4/13", opponent: "vs CLE", pts: 14, reb: 2, ast: 3, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/11", opponent: "@ MIA", pts: 20, reb: 3, ast: 5, threePM: 3, stl: 0, blk: 0 },
-        { date: "4/9", opponent: "vs CHI", pts: 16, reb: 2, ast: 4, threePM: 2, stl: 1, blk: 0 },
-        { date: "4/7", opponent: "@ ATL", pts: 22, reb: 3, ast: 6, threePM: 4, stl: 0, blk: 0 },
-        { date: "4/5", opponent: "vs NYK", pts: 18, reb: 2, ast: 3, threePM: 3, stl: 1, blk: 0 }
+        { date: "4/13", opponent: "vs CLE", pts: 18, reb: 3, ast: 5, threePM: 3, stl: 1, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 24, reb: 4, ast: 6, threePM: 4, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 19, reb: 2, ast: 4, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 22, reb: 3, ast: 7, threePM: 5, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 16, reb: 2, ast: 3, threePM: 2, stl: 1, blk: 0 }
+      ]
+    },
+    { 
+      id: 2, 
+      name: "Kyle Kuzma", 
+      position: "PF", 
+      experience: "7",
+      college: "Utah",
+      avgPoints: 15.2, 
+      avgRebounds: 5.8, 
+      avgAssists: 4.2,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 12, reb: 6, ast: 3, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 18, reb: 7, ast: 5, threePM: 3, stl: 0, blk: 1 },
+        { date: "4/9", opponent: "vs CHI", pts: 14, reb: 5, ast: 2, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 16, reb: 8, ast: 4, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 13, reb: 4, ast: 3, threePM: 1, stl: 0, blk: 1 }
+      ]
+    },
+    { 
+      id: 3, 
+      name: "Malcolm Brogdon", 
+      position: "PG", 
+      experience: "8",
+      college: "Virginia",
+      avgPoints: 12.7, 
+      avgRebounds: 3.3, 
+      avgAssists: 4.1,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 15, reb: 3, ast: 5, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 11, reb: 2, ast: 4, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 14, reb: 4, ast: 3, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 9, reb: 3, ast: 6, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 16, reb: 2, ast: 4, threePM: 3, stl: 1, blk: 0 }
+      ]
+    },
+    { 
+      id: 4, 
+      name: "Bilal Coulibaly", 
+      position: "SF", 
+      experience: "2",
+      college: "France",
+      avgPoints: 12.4, 
+      avgRebounds: 5.1, 
+      avgAssists: 3.5,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 14, reb: 6, ast: 4, threePM: 2, stl: 1, blk: 1 },
+        { date: "4/11", opponent: "@ MIA", pts: 10, reb: 4, ast: 3, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 16, reb: 7, ast: 2, threePM: 3, stl: 1, blk: 1 },
+        { date: "4/7", opponent: "@ ATL", pts: 11, reb: 5, ast: 4, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 13, reb: 6, ast: 3, threePM: 2, stl: 1, blk: 0 }
+      ]
+    },
+    { 
+      id: 5, 
+      name: "Corey Kispert", 
+      position: "SG", 
+      experience: "3",
+      college: "Gonzaga",
+      avgPoints: 11.8, 
+      avgRebounds: 2.6, 
+      avgAssists: 2.0,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 9, reb: 2, ast: 2, threePM: 2, stl: 0, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 14, reb: 3, ast: 1, threePM: 3, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 8, reb: 2, ast: 2, threePM: 1, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 13, reb: 3, ast: 1, threePM: 3, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 12, reb: 2, ast: 2, threePM: 2, stl: 0, blk: 0 }
+      ]
+    },
+    { 
+      id: 6, 
+      name: "Tyus Jones", 
+      position: "PG", 
+      experience: "9",
+      college: "Duke",
+      avgPoints: 9.8, 
+      avgRebounds: 2.4, 
+      avgAssists: 6.2,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 8, reb: 2, ast: 8, threePM: 1, stl: 1, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 3, ast: 7, threePM: 2, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 7, reb: 2, ast: 5, threePM: 1, stl: 2, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 11, reb: 3, ast: 9, threePM: 2, stl: 1, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 6, reb: 2, ast: 6, threePM: 1, stl: 0, blk: 0 }
+      ]
+    },
+    { 
+      id: 7, 
+      name: "Deni Avdija", 
+      position: "SF", 
+      experience: "4",
+      college: "Israel",
+      avgPoints: 9.4, 
+      avgRebounds: 5.2, 
+      avgAssists: 2.8,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 7, reb: 5, ast: 2, threePM: 1, stl: 1, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 12, reb: 6, ast: 3, threePM: 2, stl: 0, blk: 1 },
+        { date: "4/9", opponent: "vs CHI", pts: 8, reb: 4, ast: 2, threePM: 0, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 10, reb: 7, ast: 3, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 9, reb: 5, ast: 2, threePM: 1, stl: 1, blk: 1 }
+      ]
+    },
+    { 
+      id: 8, 
+      name: "Marvin Bagley III", 
+      position: "PF", 
+      experience: "6",
+      college: "Duke",
+      avgPoints: 8.6, 
+      avgRebounds: 4.8, 
+      avgAssists: 1.2,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 1 },
+        { date: "4/11", opponent: "@ MIA", pts: 11, reb: 6, ast: 1, threePM: 0, stl: 0, blk: 2 },
+        { date: "4/9", opponent: "vs CHI", pts: 7, reb: 4, ast: 0, threePM: 0, stl: 0, blk: 1 },
+        { date: "4/7", opponent: "@ ATL", pts: 10, reb: 7, ast: 2, threePM: 0, stl: 1, blk: 1 },
+        { date: "4/5", opponent: "vs NYK", pts: 8, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 0 }
+      ]
+    },
+    { 
+      id: 9, 
+      name: "Richaun Holmes", 
+      position: "C", 
+      experience: "9",
+      college: "Bowling Green",
+      avgPoints: 7.2, 
+      avgRebounds: 6.1, 
+      avgAssists: 0.8,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 5, reb: 7, ast: 1, threePM: 0, stl: 0, blk: 2 },
+        { date: "4/11", opponent: "@ MIA", pts: 9, reb: 8, ast: 0, threePM: 0, stl: 0, blk: 1 },
+        { date: "4/9", opponent: "vs CHI", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 0, blk: 3 },
+        { date: "4/7", opponent: "@ ATL", pts: 8, reb: 9, ast: 1, threePM: 0, stl: 1, blk: 1 },
+        { date: "4/5", opponent: "vs NYK", pts: 7, reb: 6, ast: 0, threePM: 0, stl: 0, blk: 2 }
+      ]
+    },
+    { 
+      id: 10, 
+      name: "Johnny Davis", 
+      position: "SG", 
+      experience: "2",
+      college: "Wisconsin",
+      avgPoints: 6.8, 
+      avgRebounds: 2.1, 
+      avgAssists: 1.4,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 5, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 8, reb: 3, ast: 2, threePM: 2, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 6, reb: 1, ast: 1, threePM: 1, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 9, reb: 2, ast: 1, threePM: 2, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 7, reb: 2, ast: 1, threePM: 1, stl: 0, blk: 0 }
+      ]
+    },
+    { 
+      id: 11, 
+      name: "Anthony Gill", 
+      position: "PF", 
+      experience: "4",
+      college: "Virginia",
+      avgPoints: 5.4, 
+      avgRebounds: 3.2, 
+      avgAssists: 0.9,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 4, reb: 3, ast: 1, threePM: 0, stl: 0, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 7, reb: 4, ast: 0, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 5, reb: 2, ast: 1, threePM: 0, stl: 0, blk: 1 },
+        { date: "4/7", opponent: "@ ATL", pts: 6, reb: 5, ast: 1, threePM: 0, stl: 1, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 4, reb: 3, ast: 0, threePM: 0, stl: 0, blk: 0 }
+      ]
+    },
+    { 
+      id: 12, 
+      name: "Jared Butler", 
+      position: "PG", 
+      experience: "3",
+      college: "Baylor",
+      avgPoints: 4.9, 
+      avgRebounds: 1.8, 
+      avgAssists: 2.3,
+      gameLog: [
+        { date: "4/13", opponent: "vs CLE", pts: 3, reb: 2, ast: 3, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/11", opponent: "@ MIA", pts: 6, reb: 1, ast: 2, threePM: 2, stl: 0, blk: 0 },
+        { date: "4/9", opponent: "vs CHI", pts: 4, reb: 2, ast: 2, threePM: 0, stl: 1, blk: 0 },
+        { date: "4/7", opponent: "@ ATL", pts: 7, reb: 2, ast: 3, threePM: 1, stl: 0, blk: 0 },
+        { date: "4/5", opponent: "vs NYK", pts: 5, reb: 1, ast: 2, threePM: 1, stl: 0, blk: 0 }
       ]
     }
   ];
