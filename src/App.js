@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import nbaDataService from './services/nbaDataService';
+import propAnalyticsService from './services/propAnalyticsService';
+import PropChart from './components/PropChart';
+import BettingInsights from './components/BettingInsights';
 
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -12,6 +15,12 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  
+  // Advanced analytics state
+  const [analytics, setAnalytics] = useState(null);
+  const [insights, setInsights] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Load player data from API
   useEffect(() => {
@@ -67,8 +76,100 @@ function App() {
       }
     };
 
+  // Calculate analytics when player, prop, or line changes
+  useEffect(() => {
+    if (selectedPlayer && selectedProp && propLine) {
+      const analyticsData = propAnalyticsService.calculateBettingMetrics(
+        selectedPlayer, 
+        selectedProp, 
+        propLine, 
+        hitRatePeriod
+      );
+      
+      const bettingInsights = propAnalyticsService.generateBettingInsights(
+        selectedPlayer, 
+        selectedProp, 
+        propLine, 
+        hitRatePeriod
+      );
+      
+      // Generate chart data
+      const chartDataPoints = selectedPlayer.gameLog.map((game, index) => {
+        let value = 0;
+        switch(selectedProp) {
+          case 'Points': value = game.pts; break;
+          case 'Rebounds': value = game.reb; break;
+          case 'Assists': value = game.ast; break;
+          case '3-Pointers Made': value = game.threePM; break;
+          case 'Steals': value = game.stl; break;
+          case 'Blocks': value = game.blk; break;
+          case 'Pts+Reb+Ast': value = game.pts + game.reb + game.ast; break;
+          case 'Pts+Reb': value = game.pts + game.reb; break;
+          case 'Pts+Ast': value = game.pts + game.ast; break;
+          case 'Reb+Ast': value = game.reb + game.ast; break;
+          default: value = game.pts;
+        }
+        return {
+          date: game.date,
+          value: value,
+          opponent: game.opponent,
+          isHit: value > parseFloat(propLine)
+        };
+      });
+      
+      setAnalytics(analyticsData);
+      setInsights(bettingInsights);
+      setChartData(chartDataPoints);
+    }
     loadPlayerData();
   }, []);
+
+  // Calculate analytics when player, prop, or line changes
+  useEffect(() => {
+    if (selectedPlayer && selectedProp && propLine) {
+      const analyticsData = propAnalyticsService.calculateBettingMetrics(
+        selectedPlayer, 
+        selectedProp, 
+        propLine, 
+        hitRatePeriod
+      );
+      
+      const bettingInsights = propAnalyticsService.generateBettingInsights(
+        selectedPlayer, 
+        selectedProp, 
+        propLine, 
+        hitRatePeriod
+      );
+      
+      // Generate chart data
+      const chartDataPoints = selectedPlayer.gameLog.map((game, index) => {
+        let value = 0;
+        switch(selectedProp) {
+          case 'Points': value = game.pts; break;
+          case 'Rebounds': value = game.reb; break;
+          case 'Assists': value = game.ast; break;
+          case '3-Pointers Made': value = game.threePM; break;
+          case 'Steals': value = game.stl; break;
+          case 'Blocks': value = game.blk; break;
+          case 'Pts+Reb+Ast': value = game.pts + game.reb + game.ast; break;
+          case 'Pts+Reb': value = game.pts + game.reb; break;
+          case 'Pts+Ast': value = game.pts + game.ast; break;
+          case 'Reb+Ast': value = game.reb + game.ast; break;
+          default: value = game.pts;
+        }
+        return {
+          date: game.date,
+          value: value,
+          opponent: game.opponent,
+          isHit: value > parseFloat(propLine)
+        };
+      });
+      
+      setAnalytics(analyticsData);
+      setInsights(bettingInsights);
+      setChartData(chartDataPoints);
+    }
+  }, [selectedPlayer, selectedProp, propLine, hitRatePeriod]);
 
   const filteredPlayers = players.filter(player =>
     player.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -76,10 +177,14 @@ function App() {
 
   const propTypes = [
     'Points', 'Rebounds', 'Assists', '3-Pointers Made', 
-    'Steals', 'Blocks', 'Pts+Reb+Ast', 'Pts+Reb', 'Pts+Ast'
+    'Steals', 'Blocks', 'Turnovers', 'Field Goals Made',
+    'Free Throws Made', 'Minutes Played'
   ];
 
-  const combinedProps = ['Reb+Ast'];
+  const combinedProps = [
+    'Pts+Reb+Ast', 'Pts+Reb', 'Pts+Ast', 'Reb+Ast',
+    'Pts+Reb+Ast+Stl+Blk', 'Pts+3PM', 'Reb+Ast+Stl+Blk'
+  ];
 
   const calculateHitRate = (player, prop, line, period) => {
     if (!player || !player.gameLog) return { hits: 0, total: 0, rate: 0 };
@@ -302,6 +407,15 @@ function App() {
                 className="line-input"
               />
             </div>
+            
+            <div className="advanced-toggle">
+              <button 
+                className={`toggle-button ${showAdvanced ? 'active' : ''}`}
+                onClick={() => setShowAdvanced(!showAdvanced)}
+              >
+                {showAdvanced ? 'Hide' : 'Show'} Advanced Analytics
+              </button>
+            </div>
           </div>
 
           {/* Player Analysis */}
@@ -386,6 +500,31 @@ function App() {
                   </tbody>
                 </table>
               </div>
+              
+              {/* Advanced Analytics */}
+              {showAdvanced && (
+                <div className="advanced-analytics">
+                  <div className="analytics-grid">
+                    {/* Chart */}
+                    <div className="chart-section">
+                      <PropChart 
+                        data={chartData} 
+                        prop={selectedProp} 
+                        line={propLine}
+                        playerName={selectedPlayer.name}
+                      />
+                    </div>
+                    
+                    {/* Insights */}
+                    <div className="insights-section">
+                      <BettingInsights 
+                        insights={insights} 
+                        metrics={analytics}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
