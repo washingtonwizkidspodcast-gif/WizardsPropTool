@@ -327,11 +327,7 @@ class NBADataService {
       { id: 13, name: "Anthony Gill", position: "F", height: "6'8\"", weight: "230 lbs", jersey: "16" },
       { id: 14, name: "Tristan Vukcevic", position: "F", height: "7'0\"", weight: "225 lbs", jersey: "19" },
       { id: 15, name: "Cam Whitmore", position: "SF", height: "6'7\"", weight: "232 lbs", jersey: "9" },
-      { id: 16, name: "AJ Johnson", position: "PG", height: "6'3\"", weight: "180 lbs", jersey: "5" },
-      { id: 17, name: "Jalen Duren", position: "C", height: "6'11\"", weight: "250 lbs", jersey: "0" },
-      { id: 18, name: "Jaden Ivey", position: "SG", height: "6'4\"", weight: "195 lbs", jersey: "23" },
-      { id: 19, name: "Ausar Thompson", position: "SF", height: "6'7\"", weight: "205 lbs", jersey: "11" },
-      { id: 20, name: "Isaiah Stewart", position: "PF", height: "6'8\"", weight: "250 lbs", jersey: "28" }
+      { id: 16, name: "AJ Johnson", position: "PG", height: "6'3\"", weight: "180 lbs", jersey: "5" }
     ];
   }
 
